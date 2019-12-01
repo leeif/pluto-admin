@@ -7,6 +7,14 @@ export function getApplications() {
   })
 }
 
+export function createApplication(data) {
+  return request({
+    url: '/api/application/create',
+    method: 'post',
+    data
+  })
+}
+
 export function getRoles() {
   return request({
     url: '/api/rbac/role/list',

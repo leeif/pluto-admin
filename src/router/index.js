@@ -86,12 +86,27 @@ export const constantRoutes = [
   {
     path: '/rbac',
     component: Layout,
+    redirect: '/rbac/applications',
     children: [
       {
-        path: 'index',
-        component: () => import('@/views/rbac/index'),
+        path: 'applications',
+        component: () => import('@/views/rbac/applications'),
         name: 'rbac',
         meta: { title: 'Role-based Access Control', icon: 'lock', affix: true }
+      },
+      {
+        path: 'roles?app_id=:id(\\d+)',
+        hidden: true,
+        component: () => import('@/views/rbac/roles'),
+        name: 'roles',
+        meta: { title: 'Roles', icon: 'lock', noCache: true, activeMenu: '/rbac/index' }
+      },
+      {
+        path: 'scopes?app_id=:id(\\d+)',
+        hidden: true,
+        component: () => import('@/views/rbac/scopes'),
+        name: 'scopes',
+        meta: { title: 'Scopes', icon: 'lock', noCache: true, activeMenu: '/rbac/index' }
       }
     ]
   },
