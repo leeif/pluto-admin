@@ -44,12 +44,12 @@ export default {
       'roles'
     ])
   },
-  created() {
-    this.getUser()
-  },
   watch: {
     // call again the method if the route changes
     '$route': 'getUser'
+  },
+  created() {
+    this.getUser()
   },
   methods: {
     getUser() {

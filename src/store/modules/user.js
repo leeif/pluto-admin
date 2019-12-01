@@ -11,7 +11,8 @@ const state = {
   userId: -1,
   name: '',
   avatar: '',
-  roles: []
+  roles: [],
+  application: 'pluto'
 }
 
 const mutations = {
@@ -43,13 +44,13 @@ const mutations = {
 
 const actions = {
   // user login
-  login({ commit }, userInfo) {
+  login({ commit, state }, userInfo) {
     const { mail, password } = userInfo
     return new Promise((resolve, reject) => {
       login({
         mail: mail.trim(),
         password: password,
-        app_id: 'pluto',
+        app_id: state.application,
         device_id: 'xxxx'
       }).then(response => {
         const { body } = response
@@ -98,22 +99,24 @@ const actions = {
   },
 
   refreshToken({ commit, state }) {
+    console.log('refreshToken')
     return new Promise((resolve, reject) => {
       var jwt = parseJWT(state.accessToken)
       var data = {
-        refresh_token: refreshToken,
+        refresh_token: state.refreshToken,
         app_id: jwt.appId,
         device_id: jwt.deviceId,
         user_id: jwt.userId
       }
+      console.log(data)
       refreshToken(data).then(response => {
         commit('SET_ACCESS_TOKEN', response.body.jwt)
         setAccessToken(response.body.jwt)
         var jwt = parseJWT(response.body.jwt)
         commit('SET_ACCESS_TOKEN_EXPIRED', jwt.expire_time)
-        commit('SET_USER_ID', jwt.userID)
+        commit('SET_USER_ID', jwt.userId)
         resolve()
-      }).cacht(error => {
+      }).catch(error => {
         reject(error)
       })
     })

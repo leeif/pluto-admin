@@ -20,9 +20,6 @@ export default {
     ...mapGetters([
       'roles'
     ])
-  },
-  created() {
-    
   }
 }
 </script>
