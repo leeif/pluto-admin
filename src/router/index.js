@@ -95,14 +95,14 @@ export const constantRoutes = [
         meta: { title: 'Role-based Access Control', icon: 'lock', affix: true }
       },
       {
-        path: 'roles/:appId(\\d+)/:appName(\\w+)',
+        path: 'roles/:appId(\\d+)',
         hidden: true,
         component: () => import('@/views/rbac/roles'),
         name: 'roles',
         meta: { title: 'Roles', icon: 'lock', noCache: true, activeMenu: '/rbac/index' }
       },
       {
-        path: 'scopes/:appId(\\d+)/:appName(\\w+)',
+        path: 'scopes/:appId(\\d+)',
         hidden: true,
         component: () => import('@/views/rbac/scopes'),
         name: 'scopes',

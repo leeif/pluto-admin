@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import axios from 'axios'
 
 export function login(data) {
   return request({
@@ -29,17 +30,20 @@ export function usersCount() {
   })
 }
 
-export function findUser(name) {
+export function findUser(keyword) {
   return request({
-    url: `/api/find/user?keyword=${name}`,
+    url: `/api/find/user?keyword=${keyword}`,
     method: 'get'
   })
 }
 
 export function refreshToken(data) {
+  return axios.post(`${process.env.VUE_APP_BASE_API}/api/auth/refresh`, data)
+}
+
+export function resetPassword(mail) {
   return request({
-    url: '/api/auth/refresh',
-    method: 'post',
-    data
+    url: '/api/user/password/reset/mail',
+    method: 'post'
   })
 }

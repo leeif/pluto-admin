@@ -24,7 +24,7 @@ export function getRoles(appId) {
 
 export function createRole(data) {
   return request({
-    url: '/api/rbac/application/create',
+    url: '/api/rbac/role/create',
     method: 'post',
     data
   })
@@ -39,7 +39,7 @@ export function getScopes(appId) {
 
 export function createScope(data) {
   return request({
-    url: '/api/rbac/application/create',
+    url: '/api/rbac/scope/create',
     method: 'post',
     data
   })

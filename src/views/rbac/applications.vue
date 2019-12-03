@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" @click="handleAddApplication">New Application</el-button>
+    <el-button type="danger" @click="handleAddApplication">New Application</el-button>
     <el-table v-loading="listLoading" :data="applications" border fit highlight-current-row style="width: 100%;margin-top:30px">
       <el-table-column align="center" label="System ID" width="100px">
         <template slot-scope="scope">
@@ -13,17 +13,10 @@
           {{ scope.row.name }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="Edit" width="120">
-        <template slot-scope="scope">
-          <el-button type="success" size="small" icon="el-icon-edit" @click="handleEditApplication(scope)">
-            Edit
-          </el-button>
-        </template>
-      </el-table-column>
       <el-table-column align="center" label="Roles" width="120">
         <template slot-scope="scope">
-          <router-link :to="'/rbac/roles/'+scope.row.id+'/'+scope.row.name" class="link-type">
-            <el-button type="primary" size="small" icon="el-icon-document">
+          <router-link :to="'/rbac/roles/'+scope.row.id" class="link-type">
+            <el-button type="success" size="small" icon="el-icon-document">
               Roles
             </el-button>
           </router-link>
@@ -31,7 +24,7 @@
       </el-table-column>
       <el-table-column align="center" label="Scopes" width="120">
         <template slot-scope="scope">
-          <router-link :to="'/rbac/scopes/'+scope.row.id+'/'+scope.row.name" class="link-type">
+          <router-link :to="'/rbac/scopes/'+scope.row.id" class="link-type">
             <el-button type="primary" size="small" icon="el-icon-document">
               Scopes
             </el-button>
@@ -49,31 +42,6 @@
       <div style="text-align:right;">
         <el-button type="danger" @click="newApplicationVisible=false">Cancel</el-button>
         <el-button type="primary" @click="confirmNewApplication">Confirm</el-button>
-      </div>
-    </el-dialog>
-
-    <el-dialog :visible.sync="editApplicationVisible" :title="'New Application'">
-      <el-form :model="application" label-width="80px" label-position="left">
-        <el-form-item label="Name">
-          <el-input v-model="application.name" placeholder="Role Name" />
-        </el-form-item>
-        <el-form-item label="Default Role">
-          <el-radio-group v-model="application.default_role">
-            <el-radio :label="1">
-              Option A
-            </el-radio>
-            <el-radio :label="6">
-              Option B
-            </el-radio>
-            <el-radio :label="9">
-              Option C
-            </el-radio>
-          </el-radio-group>
-        </el-form-item>
-      </el-form>
-      <div style="text-align:right;">
-        <el-button type="danger" @click="editApplicationVisible=false">Cancel</el-button>
-        <el-button type="primary" @click="confirmEditApplication">Confirm</el-button>
       </div>
     </el-dialog>
 
@@ -104,13 +72,12 @@ export default {
         page: 1,
         limit: 20
       },
-      newApplicationVisible: false,
-      editApplicationVisible: false
+      newApplicationVisible: false
     }
   },
   watch: {
     // call again the method if the route changes
-    '$route': 'usersCount'
+    '$route': 'getApplicationList'
   },
   created() {
     this.getApplicationList()
@@ -140,9 +107,7 @@ export default {
       await createApplication(data)
       this.newApplicationVisible = false
       this.getApplicationList()
-    },
-    async confirmEditApplication() {
-    },
+    }
   }
 }
 </script>

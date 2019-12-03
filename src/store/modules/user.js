@@ -110,6 +110,7 @@ const actions = {
       }
       console.log(data)
       refreshToken(data).then(response => {
+        response = response.data
         commit('SET_ACCESS_TOKEN', response.body.jwt)
         setAccessToken(response.body.jwt)
         var jwt = parseJWT(response.body.jwt)

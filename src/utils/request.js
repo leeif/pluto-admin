@@ -12,10 +12,14 @@ const service = axios.create({
 
 // request interceptor
 service.interceptors.request.use(
-  config => {
+  async config => {
     // do something before request is sent
 
-    if (store.getters.accessToken) {
+    if (store.getters.accessToken && store.getters.refreshToken) {
+      const hasExpired = Math.floor(Date.now() / 1000) > store.getters.expired
+      if (hasExpired) {
+        await store.dispatch('user/refreshToken')
+      }
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
