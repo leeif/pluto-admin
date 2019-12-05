@@ -11,13 +11,14 @@
 
       <el-table-column align="center" min-width="100px" label="Role Name">
         <template slot-scope="scope">
-          {{ scope.row.name }}
+          <svg-icon icon-class="star" style="color:#FFA500" v-show="application.default_role == scope.row.id"  />
+          <span class="link-type" @click="handleSetDefaultRole(scope)">{{ scope.row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" min-width="100px" label="Scopes">
         <template slot-scope="scope">
           <div class="block">
-            <el-tag v-for="s in scope.row.scopes" key="info" type="info" class="tag-item">
+            <el-tag v-for="s in scope.row.scopes" :key="s.name" type="info" class="tag-item" style="margin-right:5px">
               {{ s.name }}
             </el-tag>
           </div>
@@ -50,14 +51,18 @@
           <el-input v-model="role.name" placeholder="Role Name" :disabled="true"/>
         </el-form-item>
         <el-form-item label="Scopes">
-          <el-drag-select v-model="value" style="width:500px;" multiple placeholder="select scopes">
-            <el-option v-for="scope in scopes" :key="scope.id" :label="scope.name" :value="scope.name" />
+          <el-drag-select v-model="value" style="width:500px;" multiple placeholder="select scopes" @change="attachOrDetachScope" :disabled="dragSelectDisabled">
+            <el-option v-for="scope in scopes" :key="scope.id" :label="scope.name" :value="scope.id" />
           </el-drag-select>
          </el-form-item>
       </el-form>
+    </el-dialog>
+
+    <el-dialog :visible.sync="setDefaultRoleVisible" :title="'Edit Role'">
+      Set <span style="color:red;">{{ defaultRole.name }}</span> to default role ?
       <div style="text-align:right;">
-        <el-button type="danger" @click="editRoleVisible=false">Cancel</el-button>
-        <el-button type="primary" @click="confirmEditRole">Confirm</el-button>
+        <el-button type="danger" @click="setDefaultRoleVisible=false">Cancel</el-button>
+        <el-button type="primary" @click="confirmSetDefaultRole">Confirm</el-button>
       </div>
     </el-dialog>
 
@@ -68,7 +73,7 @@
 <script>
 import { deepClone } from '@/utils'
 import ElDragSelect from '@/components/DragSelect' // base on element-ui
-import { getRoles, getScopes, createRole } from '@/api/rbac'
+import { getRoles, getScopes, createRole, setDefaultRole, attachScope, detachScope } from '@/api/rbac'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 const defaultRole = {
@@ -97,8 +102,12 @@ export default {
       application: Object.assign({}, defaultApplication),
       newRoleVisible: false,
       editRoleVisible: false,
+      setDefaultRoleVisible: false,
       role: Object.assign({}, defaultRole),
-      scopes: null
+      defaultRole: Object.assign({}, defaultRole),
+      scopes: null,
+      scopeIDs: null,
+      dragSelectDisabled: false
     }
   },
   watch: {
@@ -141,10 +150,15 @@ export default {
       this.role = deepClone(scope.row)
       var v = []
       scope.row.scopes.forEach(function(scope) {
-        v.push(scope.name)
+        v.push(scope.id)
       })
       this.value = v
       this.editRoleVisible = true
+      this.scopeIDs = deepClone(this.value)
+    },
+    handleSetDefaultRole(scope) {
+      this.defaultRole = deepClone(scope.row)
+      this.setDefaultRoleVisible = true
     },
     async confirmNewRole() {
       var data = {
@@ -153,9 +167,42 @@ export default {
       }
       await createRole(data)
       this.newRoleVisible = false
-      this.getRoleList()
+      await this.getRoleList()
     },
-    async confirmEditRole() {
+    async attachOrDetachScope(event) {
+      console.log(event)
+      console.log(this.scopeIDs)
+      this.dragSelectDisabled = true
+      try {
+        var data = {
+          role_id: this.application.id
+        }
+        if (event.length > this.scopeIDs.length) {
+          data.scope_id = event[event.length-1]
+          await attachScope(data)
+        } else if (event.length < this.scopeIDs.length) {
+          data.scope_id = this.scopeIDs[this.scopeIDs.length-1]
+          console.log(data)
+          await detachScope(data)
+        }
+      } catch(error) {
+        console.log(error)
+        this.value = deepClone(this.scopeIDs)
+        this.dragSelectDisabled = false
+      }
+
+      this.scopeIDs = deepClone(event)
+      this.dragSelectDisabled = false
+      await this.getRoleList()
+    },
+    async confirmSetDefaultRole() {
+      var data = {
+        app_id: this.application.id,
+        role_id: this.defaultRole.id
+      }
+      await setDefaultRole(data)
+      this.setDefaultRoleVisible = false
+      await this.getRoleList()
     }
   }
 }

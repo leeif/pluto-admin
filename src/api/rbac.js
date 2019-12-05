@@ -30,6 +30,22 @@ export function createRole(data) {
   })
 }
 
+export function attachScope(data) {
+  return request({
+    url: '/api/rbac/scope/attach',
+    method: 'post',
+    data
+  })
+}
+
+export function detachScope(data) {
+  return request({
+    url: '/api/rbac/scope/detach',
+    method: 'post',
+    data
+  })
+}
+
 export function getScopes(appId) {
   return request({
     url: `/api/rbac/scope/list?app_id=${appId}`,
@@ -40,6 +56,14 @@ export function getScopes(appId) {
 export function createScope(data) {
   return request({
     url: '/api/rbac/scope/create',
+    method: 'post',
+    data
+  })
+}
+
+export function setDefaultRole(data) {
+  return request({
+    url: '/api/rbac/application/role/default',
     method: 'post',
     data
   })
