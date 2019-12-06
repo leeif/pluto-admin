@@ -30,17 +30,9 @@ export function createRole(data) {
   })
 }
 
-export function attachScope(data) {
+export function roleScopesBatchUpdate(data) {
   return request({
-    url: '/api/rbac/scope/attach',
-    method: 'post',
-    data
-  })
-}
-
-export function detachScope(data) {
-  return request({
-    url: '/api/rbac/scope/detach',
+    url: '/api/rbac/role/scope/batch',
     method: 'post',
     data
   })

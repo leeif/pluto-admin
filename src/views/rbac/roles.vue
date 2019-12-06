@@ -51,10 +51,14 @@
           <el-input v-model="role.name" placeholder="Role Name" :disabled="true"/>
         </el-form-item>
         <el-form-item label="Scopes">
-          <el-drag-select v-model="value" style="width:500px;" multiple placeholder="select scopes" @change="attachOrDetachScope" :disabled="dragSelectDisabled">
+          <el-drag-select v-model="value" style="width:500px;" multiple placeholder="select scopes" :disabled="dragSelectDisabled">
             <el-option v-for="scope in scopes" :key="scope.id" :label="scope.name" :value="scope.id" />
           </el-drag-select>
-         </el-form-item>
+        </el-form-item>
+        <div style="text-align:right;">
+          <el-button type="danger" @click="editRoleVisible=false">Cancel</el-button>
+          <el-button type="primary" @click="confirmEditRole">Confirm</el-button>
+        </div>
       </el-form>
     </el-dialog>
 
@@ -73,7 +77,7 @@
 <script>
 import { deepClone } from '@/utils'
 import ElDragSelect from '@/components/DragSelect' // base on element-ui
-import { getRoles, getScopes, createRole, setDefaultRole, attachScope, detachScope } from '@/api/rbac'
+import { getRoles, getScopes, createRole, setDefaultRole, roleScopesBatchUpdate } from '@/api/rbac'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 const defaultRole = {
@@ -106,7 +110,6 @@ export default {
       role: Object.assign({}, defaultRole),
       defaultRole: Object.assign({}, defaultRole),
       scopes: null,
-      scopeIDs: null,
       dragSelectDisabled: false
     }
   },
@@ -169,30 +172,13 @@ export default {
       this.newRoleVisible = false
       await this.getRoleList()
     },
-    async attachOrDetachScope(event) {
-      console.log(event)
-      console.log(this.scopeIDs)
-      this.dragSelectDisabled = true
-      try {
-        var data = {
-          role_id: this.application.id
-        }
-        if (event.length > this.scopeIDs.length) {
-          data.scope_id = event[event.length-1]
-          await attachScope(data)
-        } else if (event.length < this.scopeIDs.length) {
-          data.scope_id = this.scopeIDs[this.scopeIDs.length-1]
-          console.log(data)
-          await detachScope(data)
-        }
-      } catch(error) {
-        console.log(error)
-        this.value = deepClone(this.scopeIDs)
-        this.dragSelectDisabled = false
+    async confirmEditRole() {
+      var data = {
+        role_id: this.role.id,
+        scopes: this.value
       }
-
-      this.scopeIDs = deepClone(event)
-      this.dragSelectDisabled = false
+      await roleScopesBatchUpdate(data)
+      this.editRoleVisible = false
       await this.getRoleList()
     },
     async confirmSetDefaultRole() {
