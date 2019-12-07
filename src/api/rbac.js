@@ -60,3 +60,19 @@ export function setDefaultRole(data) {
     data
   })
 }
+
+export function setDefaultScope(data) {
+  return request({
+    url: '/api/rbac/role/scope/default',
+    method: 'post',
+    data
+  })
+}
+
+export function setUserRole(data) {
+  return request({
+    url: '/api/rbac/user/application/role',
+    method: 'post',
+    data
+  })
+}

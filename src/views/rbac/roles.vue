@@ -19,7 +19,8 @@
         <template slot-scope="scope">
           <div class="block">
             <el-tag v-for="s in scope.row.scopes" :key="s.name" type="info" class="tag-item" style="margin-right:5px">
-              {{ s.name }}
+              <svg-icon icon-class="star" style="color:#FFA500" v-show="scope.row.default_scope == s.id" />
+              <span class="link-type" @click="handleSetDefaultScope(scope.row, s)">{{ s.name }}</span>
             </el-tag>
           </div>
         </template>
@@ -62,13 +63,32 @@
       </el-form>
     </el-dialog>
 
-    <el-dialog :visible.sync="setDefaultRoleVisible" :title="'Edit Role'">
+    <el-dialog :visible.sync="setDefaultRoleVisible" :title="'Edit Default Role'">
       Set <span style="color:red;">{{ defaultRole.name }}</span> to default role ?
       <div style="text-align:right;">
         <el-button type="danger" @click="setDefaultRoleVisible=false">Cancel</el-button>
         <el-button type="primary" @click="confirmSetDefaultRole">Confirm</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog :visible.sync="setDefaultScopeVisible" :title="'Edit Default Scope'">
+      Set <span style="color:red;">{{ defaultScope.name }}</span> to default scope ?
+      <div style="text-align:right;">
+        <el-button type="danger" @click="setDefaultScopeVisible=false">Cancel</el-button>
+        <el-button type="primary" @click="confirmSetDefaultScope">Confirm</el-button>
+      </div>
+    </el-dialog>
+    <div>
+      <span class="permission-alert">
+        <svg-icon icon-class="star" style="color:#FFA500" /> Default Role: Used when no role specified login
+      </span>
+    </div>
+
+    <div>
+      <span class="permission-alert">
+        <svg-icon icon-class="star" style="color:#FFA500" /> Default Scope
+      </span>
+    </div>
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getRoleList" />
   </div>
@@ -77,12 +97,16 @@
 <script>
 import { deepClone } from '@/utils'
 import ElDragSelect from '@/components/DragSelect' // base on element-ui
-import { getRoles, getScopes, createRole, setDefaultRole, roleScopesBatchUpdate } from '@/api/rbac'
+import { getRoles, getScopes, createRole, setDefaultRole, setDefaultScope, roleScopesBatchUpdate } from '@/api/rbac'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 const defaultRole = {
   name: '',
   default_scope: null
+}
+
+const defaultScope = {
+  name: ''
 }
 
 const defaultApplication = {
@@ -107,8 +131,10 @@ export default {
       newRoleVisible: false,
       editRoleVisible: false,
       setDefaultRoleVisible: false,
+      setDefaultScopeVisible: false,
       role: Object.assign({}, defaultRole),
       defaultRole: Object.assign({}, defaultRole),
+      defaultScope: Object.assign({}, defaultScope),
       scopes: null,
       dragSelectDisabled: false
     }
@@ -163,6 +189,11 @@ export default {
       this.defaultRole = deepClone(scope.row)
       this.setDefaultRoleVisible = true
     },
+    handleSetDefaultScope(role, s) {
+      this.defaultRole = deepClone(role)
+      this.defaultScope = deepClone(s)
+      this.setDefaultScopeVisible = true
+    },
     async confirmNewRole() {
       var data = {
         app_id: this.application.id,
@@ -189,6 +220,15 @@ export default {
       await setDefaultRole(data)
       this.setDefaultRoleVisible = false
       await this.getRoleList()
+    },
+    async confirmSetDefaultScope() {
+      var data = {
+        role_id: this.defaultRole.id,
+        scope_id: this.defaultScope.id
+      }
+      await setDefaultScope(data)
+      this.setDefaultScopeVisible = false
+      await this.getRoleList()
     }
   }
 }
@@ -202,5 +242,14 @@ export default {
   position: absolute;
   right: 15px;
   top: 10px;
+}
+
+.permission-alert {
+  margin-top: 15px;
+  background-color: #f0f9eb;
+  color: #67c23a;
+  padding: 8px 16px;
+  border-radius: 4px;
+  display: inline-block;
 }
 </style>

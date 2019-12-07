@@ -54,7 +54,7 @@ const actions = {
         device_id: 'xxxx'
       }).then(response => {
         const { body } = response
-        console.log(body)
+        console.log(response)
         commit('SET_ACCESS_TOKEN', body.jwt)
         setAccessToken(body.jwt)
         commit('SET_REFRESH_TOKEN', body.refresh_token)
