@@ -1,12 +1,21 @@
-FROM node:11
+FROM node:11 as build
 
 ADD . /pluto-admin
 
 WORKDIR /pluto-admin
 
-RUN rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm i -g simple-server
+ARG VUE_APP_BASE_API
+
+RUN rm -rf node_modules/ && rm -rf package-lock.json && npm install
+RUN VUE_APP_BASE_API=$VUE_APP_BASE_API npm run build:prod
+
+FROM ubuntu:18.04
+
+COPY --from=build /pluto-admin/dist /pluto-admin/dist
+
 RUN apt-get update && apt-get install -y python3
 
-ENV VUE_APP_BASE_API=http://localhost:8010
+WORKDIR /pluto-admin/dist
 
-ENTRYPOINT npm run build:prod && cd dist && python3 -m http.server 8888
+
+ENTRYPOINT python3 -m http.server 8888

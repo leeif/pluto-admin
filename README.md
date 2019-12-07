@@ -48,17 +48,12 @@ npm install
 npm run dev
 ```
 
+Change the proxy target to your own domain of the pluto server  in [vue.config.js](https://github.com/leeif/pluto-admin/blob/master/vue.config.js#L42).
+
 Build
 ```
 npm run build:stage
 npm run build:prod
 ```
 
-Docker
-===
-
-```
-docker build -t pluto-admin .
-
-docker run -e VUE_APP_BASE_API=http://<pluto server endpoint> -t pluto-admin -d
-```
+Update the env variable VUE_APP_BASE_API to your own domain of the pluto server in .env files.
