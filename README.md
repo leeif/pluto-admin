@@ -18,11 +18,19 @@ Snapshots
 
 login page
 
+![login page](https://github.com/leeif/pluto-admin/blob/master/snapshots/login.png)
+
 dashboard
+
+![dashboard page](https://github.com/leeif/pluto-admin/blob/master/snapshots/dashboard.png)
 
 rbac page
 
+![rbac page](https://github.com/leeif/pluto-admin/blob/master/snapshots/rbac.png)
+
 user management
+
+![user_management page](https://github.com/leeif/pluto-admin/blob/master/snapshots/user_managment.png)
 
 Development
 ===
