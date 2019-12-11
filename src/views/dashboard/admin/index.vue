@@ -1,24 +1,50 @@
 <template>
   <div class="dashboard-editor-container">
 
-    <panel-group />
+    <panel-group :user-data="userData" />
+
+    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+      <pie-chart :user-data="userData" />
+    </el-row>
 
   </div>
 </template>
 
 <script>
 import PanelGroup from './components/PanelGroup'
+import PieChart from './components/PieChart'
+import { usersCount } from '@/api/user'
 
 export default {
   name: 'DashboardAdmin',
   components: {
-    PanelGroup
+    PanelGroup, PieChart
   },
   data() {
     return {
+      userData: {
+        total: 0,
+        mail: 0,
+        google: 0,
+        apple: 0
+      }
     }
   },
+  watch: {
+    // call again the method if the route changes
+    '$route': 'usersCount'
+  },
+  created() {
+    this.usersCount()
+  },
   methods: {
+    usersCount() {
+      var self = this
+      usersCount().then(function(response) {
+        console.log(response)
+        self.userData = response.body
+      })
+    }
   }
 }
 </script>

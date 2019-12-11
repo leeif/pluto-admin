@@ -41,9 +41,10 @@ export function refreshToken(data) {
   return axios.post(`${process.env.VUE_APP_BASE_API}/api/auth/refresh`, data)
 }
 
-export function resetPassword(mail) {
+export function resetPassword(data) {
   return request({
     url: '/api/user/password/reset/mail',
-    method: 'post'
+    method: 'post',
+    data
   })
 }
