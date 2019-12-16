@@ -18,7 +18,7 @@ docker-clean:
 	docker rmi $(shell docker images --filter dangling=true -q 2>/dev/null) 2>/dev/null || true
 
 docker-stg-clean:
-	docker rmi leeif/pluto-admin-stg:latest || true
+	docker rmi leeif/pluto-admin-stg:$(VERSION) || true
 	docker rm -v $(shell docker ps --filter status=exited -q 2>/dev/null) 2>/dev/null || true
 	docker rmi $(shell docker images --filter dangling=true -q 2>/dev/null) 2>/dev/null || true
 
