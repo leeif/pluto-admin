@@ -1,7 +1,7 @@
 <template>
   <el-card style="margin-bottom:20px;">
     <div slot="header" class="clearfix">
-      <span>Found User</span>
+      <span>User</span>
     </div>
 
     <div class="user-profile">
@@ -11,11 +11,12 @@
         </pan-thumb>
       </div>
       <div class="box-center">
-        <div class="user-name text-center">{{ user.name }}</div>
+        <div class="user-name text-center">{{ user.name }} ({{ user.login_type }})</div>
       </div>
     </div>
 
     <div class="user-bio">
+      <div class="text-center">{{ user.mail }}</div>
     </div>
   </el-card>
 </template>

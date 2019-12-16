@@ -6,15 +6,22 @@
         Search
       </el-button>
     </div>
-    <div v-if="!user">
+
+    <div v-if="users" class="block">
+      <el-tag v-for="u in users" :key="u.id" :type="u.id == user.id ? 'danger' : 'info'" class="tag-item" style="margin-right:5px">
+        <span class="link-type" @click="selectUser(u)">{{ u.name }} ({{ u.login_type }})</span>
+      </el-tag>
+    </div>
+
+    <div v-if="(!users || users.length == 0) && !user">
       No User Found
     </div>
-    <div v-if="user">
+    <div v-if="user" style="margin-top:10px">
       <el-col :span="6" :xs="24">
         <user-card :user="user" />
       </el-col>
       <el-col :span="14" :xs="24">
-        <el-table :data="applications" border fit highlight-current-row style="width: 100%;margin-left:30px;margin-bottom:30px">
+        <el-table :data="user.applications" border fit highlight-current-row style="width: 100%;margin-left:30px;margin-bottom:30px">
           <el-table-column align="center" label="Application Name" width="100px">
             <template slot-scope="scope">
               {{ scope.row.name }}
@@ -43,7 +50,7 @@
     <el-dialog :visible.sync="editRoleVisible" :title="'Edit Application'">
       <el-form :model="application" label-width="80px" label-position="left">
         <el-form-item label="Name">
-          <el-input v-model="application.name" placeholder=" Name" :disabled="true"/>
+          <el-input v-model="application.name" placeholder=" Name" :disabled="true" />
         </el-form-item>
         <el-form-item label="Roles">
           <el-select v-model="value" style="width:500px;" placeholder="select roles">
@@ -64,15 +71,14 @@ import { findUser } from '@/api/user'
 import { getRoles, setUserRole } from '@/api/rbac'
 import { deepClone } from '@/utils'
 import UserCard from './components/UserCard'
-import ElDragSelect from '@/components/DragSelect' 
 
 const defaultApplication = {
   name: ''
 }
 
 export default {
-  name: 'user',
-  components: { UserCard, ElDragSelect },
+  name: 'User',
+  components: { UserCard },
   data() {
     return {
       application: Object.assign({}, defaultApplication),
@@ -80,13 +86,13 @@ export default {
       value: null,
       editRoleVisible: false,
       user: null,
+      users: null,
       applications: null,
       list: null,
       total: 0,
-      user: null,
       listLoading: true,
       listQuery: {
-        keyword: ""
+        keyword: ''
       }
     }
   },
@@ -96,22 +102,25 @@ export default {
     async handleFindUser() {
       try {
         var res = await findUser(this.listQuery.keyword)
-        console.log(res.body)
-        this.user = res.body
+        console.log(res.body.users)
+        this.users = res.body.users
+        this.user = this.users[0]
         this.applications = res.body.applications
-      } catch(error) {
+      } catch (error) {
         console.log(error)
+        this.users = null
         this.user = null
       }
     },
     async handleEditRole(scope) {
-      var self = this
       this.application = deepClone(scope.row)
       var res = await getRoles(this.application.id)
       console.log(res.body.roles)
       this.roles = res.body.roles
       if (scope.row.roles.length > 0) {
         this.value = scope.row.roles[0].id
+      } else {
+        this.value = null
       }
       this.editRoleVisible = true
     },
@@ -119,11 +128,14 @@ export default {
       var data = {
         app_id: this.application.id,
         user_id: this.user.id,
-        role_id: this.value,
+        role_id: this.value
       }
       await setUserRole(data)
       this.editRoleVisible = false
       await this.handleFindUser()
+    },
+    selectUser(user) {
+      this.user = user
     }
   }
 }
