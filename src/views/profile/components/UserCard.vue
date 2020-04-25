@@ -17,8 +17,7 @@
       </div>
     </div>
 
-    <div class="user-bio">
-    </div>
+    <div class="user-bio" />
   </el-card>
 </template>
 
@@ -35,7 +34,7 @@ export default {
           name: '',
           email: '',
           avatar: '',
-          roles: ''
+          role: ''
         }
       }
     }

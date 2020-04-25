@@ -11,7 +11,7 @@ const state = {
   userId: -1,
   name: '',
   avatar: '',
-  roles: [],
+  role: '',
   application: 'pluto'
 }
 
@@ -37,8 +37,8 @@ const mutations = {
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
   },
-  SET_ROLES: (state, roles) => {
-    state.roles = roles
+  SET_ROLE: (state, role) => {
+    state.role = role
   }
 }
 
@@ -80,14 +80,13 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { mail, roles, name, avatar } = body
+        const { mail, role, name, avatar } = body
 
-        // roles must be a non-empty array
-        if (!roles || roles.length <= 0) {
-          reject('getInfo: roles must be a non-null array!')
+        if (role !== 'admin') {
+          reject('Not admin role.')
         }
 
-        commit('SET_ROLES', roles)
+        commit('SET_ROLE', role)
         commit('SET_MAIL', mail)
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
@@ -130,7 +129,7 @@ const actions = {
       commit('SET_USER_ID', -1)
       commit('SET_ACCESS_TOKEN_EXPIRED', 0)
       commit('SET_REFRESH_TOKEN', '')
-      commit('SET_ROLES', [])
+      commit('SET_ROLE', '')
       removeAccessToken()
       removeRefreshToken()
       resetRouter()
