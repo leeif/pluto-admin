@@ -44,8 +44,11 @@ cd pluto-admin
 # install dependency
 npm install
 
-# develop
+# develop, the base api url is default as http://localhost:8010
 npm run dev
+
+# staging/production, set the base api url of pluto server
+VUE_APP_BASE_API=https://xxxx npm run staging/production
 ```
 
 Change the proxy target to your own domain of the pluto server  in [vue.config.js](https://github.com/leeif/pluto-admin/blob/master/vue.config.js#L42).
