@@ -41,7 +41,7 @@ export default {
       'name',
       'mail',
       'avatar',
-      'roles'
+      'role'
     ])
   },
   watch: {
@@ -55,7 +55,7 @@ export default {
     getUser() {
       this.user = {
         name: this.name,
-        role: this.roles.join(' | '),
+        role: this.role,
         email: this.mail,
         avatar: this.avatar
       }

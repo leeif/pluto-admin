@@ -11,7 +11,7 @@
         </pan-thumb>
       </div>
       <div class="box-center">
-        <div class="user-name text-center">{{ user.name }} ({{ user.login_type }})</div>
+        <div class="user-name text-center">{{ user.name }}</div>
       </div>
     </div>
 

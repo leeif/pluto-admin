@@ -30,9 +30,9 @@ export function usersCount() {
   })
 }
 
-export function findUser(keyword) {
+export function findUser(name) {
   return request({
-    url: `/api/find/user?keyword=${keyword}`,
+    url: `/api/user/search?name=${name}`,
     method: 'get'
   })
 }
