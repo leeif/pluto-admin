@@ -82,7 +82,7 @@ const actions = {
 
         const { mail, role, name, avatar } = body
 
-        if (role !== 'admin') {
+        if (role !== process.env.VUE_PLUTO_ADMIN_ROLE) {
           reject('Not admin role.')
         }
 
