@@ -6,15 +6,15 @@
         <h3 class="title">Pluto Admin</h3>
       </div>
 
-      <el-form-item prop="mail">
+      <el-form-item prop="account">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
         <el-input
-          ref="mail"
-          v-model="loginForm.mail"
-          placeholder="Mail"
-          name="mail"
+          ref="account"
+          v-model="loginForm.account"
+          placeholder="User name or mail"
+          name="account"
           type="text"
           tabindex="1"
           autocomplete="on"
@@ -52,13 +52,13 @@
 </template>
 
 <script>
-import SocialSign from './components/SocialSignin'
 
+import { Message } from 'element-ui'
 export default {
   name: 'Login',
-  components: { SocialSign },
+  components: {},
   data() {
-    const validateMail = (rule, value, callback) => {
+    const validateAccount = (rule, value, callback) => {
       callback()
     }
     const validatePassword = (rule, value, callback) => {
@@ -66,11 +66,11 @@ export default {
     }
     return {
       loginForm: {
-        mail: '',
+        account: '',
         password: ''
       },
       loginRules: {
-        mail: [{ required: true, trigger: 'blur', validator: validateMail }],
+        account: [{ required: true, trigger: 'blur', validator: validateAccount }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       passwordType: 'password',
@@ -97,8 +97,8 @@ export default {
     // window.addEventListener('storage', this.afterQRScan)
   },
   mounted() {
-    if (this.loginForm.mail === '') {
-      this.$refs.mail.focus()
+    if (this.loginForm.account === '') {
+      this.$refs.account.focus()
     } else if (this.loginForm.password === '') {
       this.$refs.password.focus()
     }
@@ -139,6 +139,7 @@ export default {
               this.loading = false
             })
             .catch((err) => {
+              Message.error(err)
               this.loading = false
             })
         } else {

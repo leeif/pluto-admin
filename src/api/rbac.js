@@ -2,14 +2,14 @@ import request from '@/utils/request'
 
 export function getApplications() {
   return request({
-    url: '/api/rbac/application/list',
+    url: '/v1/rbac/application/list',
     method: 'get'
   })
 }
 
 export function createApplication(data) {
   return request({
-    url: '/api/rbac/application/create',
+    url: '/v1/rbac/application/create',
     method: 'post',
     data
   })
@@ -17,14 +17,14 @@ export function createApplication(data) {
 
 export function getRoles(appId) {
   return request({
-    url: `/api/rbac/role/list?app_id=${appId}`,
+    url: `/v1/rbac/role/list?app_id=${appId}`,
     method: 'get'
   })
 }
 
 export function createRole(data) {
   return request({
-    url: '/api/rbac/role/create',
+    url: '/v1/rbac/role/create',
     method: 'post',
     data
   })
@@ -32,7 +32,7 @@ export function createRole(data) {
 
 export function roleScopesBatchUpdate(data) {
   return request({
-    url: '/api/rbac/role/scope/batch',
+    url: '/v1/rbac/role/scope/batch',
     method: 'post',
     data
   })
@@ -40,14 +40,14 @@ export function roleScopesBatchUpdate(data) {
 
 export function getScopes(appId) {
   return request({
-    url: `/api/rbac/scope/list?app_id=${appId}`,
+    url: `/v1/rbac/scope/list?app_id=${appId}`,
     method: 'get'
   })
 }
 
 export function createScope(data) {
   return request({
-    url: '/api/rbac/scope/create',
+    url: '/v1/rbac/scope/create',
     method: 'post',
     data
   })
@@ -55,7 +55,7 @@ export function createScope(data) {
 
 export function setDefaultRole(data) {
   return request({
-    url: '/api/rbac/application/role/default',
+    url: '/v1/rbac/application/role/default',
     method: 'post',
     data
   })
@@ -63,7 +63,7 @@ export function setDefaultRole(data) {
 
 export function setDefaultScope(data) {
   return request({
-    url: '/api/rbac/role/scope/default',
+    url: '/v1/rbac/role/scope/default',
     method: 'post',
     data
   })
@@ -71,7 +71,7 @@ export function setDefaultScope(data) {
 
 export function setUserRole(data) {
   return request({
-    url: '/api/rbac/user/application/role',
+    url: '/v1/rbac/user/application/role',
     method: 'post',
     data
   })

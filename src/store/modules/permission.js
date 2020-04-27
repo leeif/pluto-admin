@@ -51,7 +51,7 @@ const actions = {
   generateRoutes({ commit }, role) {
     return new Promise(resolve => {
       let accessedRoutes
-      if (role === process.env.VUE_PLUTO_ADMIN_ROLE) {
+      if (role === process.env.VUE_APP_PLUTO_ADMIN_ROLE) {
         accessedRoutes = asyncRoutes || []
       } else {
         accessedRoutes = filterAsyncRoutes(asyncRoutes, role)

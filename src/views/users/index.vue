@@ -68,6 +68,7 @@
 
 <script>
 import { findUser } from '@/api/user'
+import { Message } from 'element-ui'
 import { getRoles, setUserRole } from '@/api/rbac'
 import { deepClone } from '@/utils'
 import UserCard from './components/UserCard'
@@ -102,8 +103,10 @@ export default {
     async handleFindUser() {
       try {
         var res = await findUser(this.listQuery.keyword)
-        console.log(res.body.users)
         this.users = res.body.users
+        if (this.users.length < 1) {
+          Message.error('user not found')
+        }
         this.user = this.users[0]
         this.applications = res.body.applications
       } catch (error) {

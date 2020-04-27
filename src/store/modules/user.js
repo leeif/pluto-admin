@@ -1,5 +1,5 @@
 import { login, getInfo, refreshToken } from '@/api/user'
-import { getAccessToken, getRefreshToken, setAccessToken,
+import { getAccessTokenExpired, setAccessTokenExpired, getAccessToken, getRefreshToken, setAccessToken,
   setRefreshToken, removeAccessToken, removeRefreshToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 import { parseJWT } from '@/utils/jwt'
@@ -7,12 +7,12 @@ import { parseJWT } from '@/utils/jwt'
 const state = {
   accessToken: getAccessToken(),
   refreshToken: getRefreshToken(),
-  expired: 0,
+  expired: getAccessTokenExpired(),
   userId: -1,
   name: '',
   avatar: '',
   role: '',
-  application: 'pluto'
+  application: process.env.VUE_APP_PLUTO_ADMIN_APPLICATION
 }
 
 const mutations = {
@@ -45,23 +45,24 @@ const mutations = {
 const actions = {
   // user login
   login({ commit, state }, userInfo) {
-    const { mail, password } = userInfo
+    const { account, password } = userInfo
     return new Promise((resolve, reject) => {
       login({
-        mail: mail.trim(),
+        account: account.trim(),
         password: password,
         app_id: state.application,
         device_id: 'xxxx'
       }).then(response => {
         const { body } = response
         console.log(response)
-        commit('SET_ACCESS_TOKEN', body.jwt)
-        setAccessToken(body.jwt)
+        commit('SET_ACCESS_TOKEN', body.access_token)
+        setAccessToken(body.access_token)
         commit('SET_REFRESH_TOKEN', body.refresh_token)
         setRefreshToken(body.refresh_token)
-        var jwt = parseJWT(body.jwt)
-        commit('SET_ACCESS_TOKEN_EXPIRED', jwt.expire_time)
-        commit('SET_USER_ID', jwt.userID)
+        var jwt = parseJWT(body.access_token)
+        commit('SET_ACCESS_TOKEN_EXPIRED', jwt.exp)
+        setAccessTokenExpired(jwt.exp)
+        commit('SET_USER_ID', jwt.sub)
         resolve()
       }).catch(error => {
         console.log(error)
@@ -82,7 +83,7 @@ const actions = {
 
         const { mail, role, name, avatar } = body
 
-        if (role !== process.env.VUE_PLUTO_ADMIN_ROLE) {
+        if (role !== process.env.VUE_APP_PLUTO_ADMIN_ROLE) {
           reject('Not admin role.')
         }
 
@@ -100,21 +101,21 @@ const actions = {
   refreshToken({ commit, state }) {
     console.log('refreshToken')
     return new Promise((resolve, reject) => {
-      var jwt = parseJWT(state.accessToken)
       var data = {
         refresh_token: state.refreshToken,
-        app_id: jwt.appId,
-        device_id: jwt.deviceId,
-        user_id: jwt.userId
+        app_id: state.application
       }
       console.log(data)
       refreshToken(data).then(response => {
         response = response.data
-        commit('SET_ACCESS_TOKEN', response.body.jwt)
-        setAccessToken(response.body.jwt)
-        var jwt = parseJWT(response.body.jwt)
-        commit('SET_ACCESS_TOKEN_EXPIRED', jwt.expire_time)
-        commit('SET_USER_ID', jwt.userId)
+        commit('SET_ACCESS_TOKEN', response.body.access_token)
+        setAccessToken(response.body.access_token)
+        commit('SET_REFRESH_TOKEN', response.body.refresh_token)
+        setRefreshToken(response.body.refresh_token)
+        var jwt = parseJWT(response.body.access_token)
+        commit('SET_ACCESS_TOKEN_EXPIRED', jwt.exp)
+        setAccessTokenExpired(jwt.exp)
+        commit('SET_USER_ID', jwt.sub)
         resolve()
       }).catch(error => {
         reject(error)

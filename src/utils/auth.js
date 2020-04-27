@@ -2,6 +2,15 @@ import Cookies from 'js-cookie'
 
 const RefreshTokenKey = 'Admin-RefreshToken'
 const AccessTokenKey = 'Admin-AccessToken'
+const AccessTokenExpiredKey = 'Admin-AccessTokenExpired'
+
+export function getAccessTokenExpired() {
+  return Cookies.get(AccessTokenExpiredKey)
+}
+
+export function setAccessTokenExpired(expired) {
+  return Cookies.set(AccessTokenExpiredKey, expired)
+}
 
 export function getRefreshToken() {
   return Cookies.get(RefreshTokenKey)

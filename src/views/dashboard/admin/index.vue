@@ -3,30 +3,22 @@
 
     <panel-group :user-data="userData" />
 
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <pie-chart :user-data="userData" />
-    </el-row>
-
   </div>
 </template>
 
 <script>
 import PanelGroup from './components/PanelGroup'
-import PieChart from './components/PieChart'
 import { usersCount } from '@/api/user'
 
 export default {
   name: 'DashboardAdmin',
   components: {
-    PanelGroup, PieChart
+    PanelGroup
   },
   data() {
     return {
       userData: {
-        total: 0,
-        mail: 0,
-        google: 0,
-        apple: 0
+        total: 0
       }
     }
   },
