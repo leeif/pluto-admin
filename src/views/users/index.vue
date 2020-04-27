@@ -9,7 +9,7 @@
 
     <div v-if="users" class="block">
       <el-tag v-for="u in users" :key="u.id" :type="u.id == user.id ? 'danger' : 'info'" class="tag-item" style="margin-right:5px">
-        <span class="link-type" @click="selectUser(u)">{{ u.name }} ({{ u.login_type }})</span>
+        <span class="link-type" @click="selectUser(u)">{{ u.name }}</span>
       </el-tag>
     </div>
 
