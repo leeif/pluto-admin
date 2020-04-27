@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.keyword" placeholder="Name or Mail Address" style="width: 400px;margin-right: 5px" class="filter-item" @keyup.enter.native="handleFindUser" />
+      <el-input v-model="listQuery.keyword" placeholder="User Name" style="width: 400px;margin-right: 5px" class="filter-item" @keyup.enter.native="handleFindUser" />
       <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFindUser">
         Search
       </el-button>
