@@ -32,8 +32,6 @@ update-tag:
 	git tag $(VERSION)
 	git push origin $(VERSION)
 
-jenkins-ci: check-version-tag update-tag
-
-ci-build-production: check-version-tag docker-build docker-push docker-clean update-tag
+ci-build-production: docker-build docker-push docker-clean
 
 ci-build-staging: docker-stg-build docker-stg-push docker-stg-clean
