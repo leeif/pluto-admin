@@ -83,8 +83,8 @@ const actions = {
 
         const { mail, role, name, avatar } = body
 
-        if (role !== process.env.VUE_APP_PLUTO_ADMIN_ROLE) {
-          reject('Not admin role.')
+        if (role !== process.env.VUE_APP_PLUTO_ADMIN_ROLE && role !== process.env.VUE_APP_PLUTO_USER_ROLE) {
+          reject(`Role: ${role} is not supported.`)
         }
 
         commit('SET_ROLE', role)

@@ -61,68 +61,6 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/404',
-    component: () => import('@/views/error-page/404'),
-    hidden: true
-  },
-  {
-    path: '/401',
-    component: () => import('@/views/error-page/401'),
-    hidden: true
-  },
-  {
-    path: '/',
-    component: Layout,
-    redirect: '/dashboard',
-    children: [
-      {
-        path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
-        name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
-      }
-    ]
-  },
-  {
-    path: '/rbac',
-    component: Layout,
-    redirect: '/rbac/applications',
-    children: [
-      {
-        path: 'applications',
-        component: () => import('@/views/rbac/applications'),
-        name: 'rbac',
-        meta: { title: 'Role-based Access Control', icon: 'lock', affix: true }
-      },
-      {
-        path: 'roles/:appId(\\d+)',
-        hidden: true,
-        component: () => import('@/views/rbac/roles'),
-        name: 'roles',
-        meta: { title: 'Roles', icon: 'lock', noCache: true, activeMenu: '/rbac/index' }
-      },
-      {
-        path: 'scopes/:appId(\\d+)',
-        hidden: true,
-        component: () => import('@/views/rbac/scopes'),
-        name: 'scopes',
-        meta: { title: 'Scopes', icon: 'lock', noCache: true, activeMenu: '/rbac/index' }
-      }
-    ]
-  },
-  {
-    path: '/users',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/users/index'),
-        name: 'users',
-        meta: { title: 'User Management', icon: 'peoples', affix: true }
-      }
-    ]
-  },
-  {
     path: '/profile',
     component: Layout,
     redirect: '/profile/index',
@@ -135,6 +73,16 @@ export const constantRoutes = [
         meta: { title: 'Profile', icon: 'user', noCache: true }
       }
     ]
+  },
+  {
+    path: '/404',
+    component: () => import('@/views/error-page/404'),
+    hidden: true
+  },
+  {
+    path: '/401',
+    component: () => import('@/views/error-page/401'),
+    hidden: true
   }
 ]
 
@@ -143,6 +91,102 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
  */
 export const asyncRoutes = [
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/dashboard',
+    children: [
+      {
+        path: 'dashboard',
+        component: () => import('@/views/dashboard/index'),
+        name: 'Dashboard',
+        meta: {
+          title: 'Dashboard',
+          icon: 'dashboard',
+          affix: true,
+          roles: ['admin', 'user']
+        }
+      }
+    ]
+  },
+  {
+    path: '/rbac',
+    component: Layout,
+    redirect: '/rbac/applications',
+    children: [
+      {
+        path: 'applications',
+        component: () => import('@/views/rbac/applications'),
+        name: 'rbac',
+        meta: {
+          title: 'Role-based Access Control',
+          icon: 'lock',
+          affix: true,
+          roles: ['admin']
+        }
+      },
+      {
+        path: 'roles/:appId(\\d+)',
+        hidden: true,
+        component: () => import('@/views/rbac/roles'),
+        name: 'roles',
+        meta: {
+          title: 'Roles',
+          icon: 'lock',
+          noCache: true,
+          activeMenu: '/rbac/index',
+          roles: ['admin']
+        }
+      },
+      {
+        path: 'scopes/:appId(\\d+)',
+        hidden: true,
+        component: () => import('@/views/rbac/scopes'),
+        name: 'scopes',
+        meta: {
+          title: 'Scopes',
+          icon: 'lock',
+          noCache: true,
+          activeMenu: '/rbac/index',
+          roles: ['admin']
+        }
+      }
+    ]
+  },
+  {
+    path: '/users',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/users/index'),
+        name: 'users',
+        meta: {
+          title: 'User Management',
+          icon: 'peoples',
+          affix: true,
+          roles: ['admin']
+        }
+      }
+    ]
+  },
+  {
+    path: '/clients',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/client/client'),
+        name: 'clients',
+        meta: {
+          title: 'OAuth Clients',
+          icon: 'people',
+          affix: true,
+          roles: ['admin', 'user']
+        }
+      }
+    ]
+  },
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

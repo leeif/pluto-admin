@@ -11,9 +11,9 @@
           {{ user.role }}
         </pan-thumb>
       </div>
-      <div class="box-center">
-        <div class="user-name text-center">{{ user.name }}</div>
-        <div class="user-role text-center text-muted">{{ user.role | uppercaseFirst }}</div>
+      <div class="">
+        <p class="user-name text-center">{{ user.name }}</p>
+        <p class="user-role text-center text-muted">{{ user.role | uppercaseFirst }}</p>
       </div>
     </div>
 
@@ -53,12 +53,11 @@ export default {
 }
 
 .user-profile {
+
   .user-name {
     font-weight: bold;
-  }
-
-  .box-center {
-    padding-top: 10px;
+    display: block;
+    word-wrap: break-word;
   }
 
   .user-role {

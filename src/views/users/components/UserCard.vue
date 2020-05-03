@@ -54,6 +54,7 @@ export default {
 .user-profile {
   .user-name {
     font-weight: bold;
+    width: 80%;
   }
 
   .box-center {
