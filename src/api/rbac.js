@@ -32,8 +32,8 @@ export function createRole(data) {
 
 export function roleScopesBatchUpdate(data) {
   return request({
-    url: '/api/rbac/role/scope/batch',
-    method: 'post',
+    url: '/v1/rbac/role/scope',
+    method: 'PUT',
     data
   })
 }
