@@ -76,3 +76,18 @@ export function setUserRole(data) {
     data
   })
 }
+
+export function getAppI18nNames(appId) {
+  return request({
+    url: `/v1/rbac/application/i18n-name?app_id=${appId}`,
+    method: 'get'
+  })
+}
+
+export function setAppI18nNames(data) {
+  return request({
+    url: '/v1/rbac/application/update-i18n-name',
+    method: 'post',
+    data
+  })
+}

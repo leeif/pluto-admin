@@ -139,6 +139,19 @@ export const asyncRoutes = [
         }
       },
       {
+        path: 'app-i18n-names/:appId(\\d+)',
+        hidden: true,
+        component: () => import('@/views/rbac/appI18nNames'),
+        name: 'app-i18n-names',
+        meta: {
+          title: 'I18nNames',
+          icon: 'lock',
+          noCache: true,
+          activeMenu: '/rbac/index',
+          roles: ['admin']
+        }
+      },
+      {
         path: 'scopes/:appId(\\d+)',
         hidden: true,
         component: () => import('@/views/rbac/scopes'),
@@ -191,11 +204,12 @@ export const asyncRoutes = [
   { path: '*', redirect: '/404', hidden: true }
 ]
 
-const createRouter = () => new Router({
-  // mode: 'history', // require service support
-  scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
-})
+const createRouter = () =>
+  new Router({
+    // mode: 'history', // require service support
+    scrollBehavior: () => ({ y: 0 }),
+    routes: constantRoutes
+  })
 
 const router = createRouter()
 
